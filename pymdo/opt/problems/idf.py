@@ -55,13 +55,24 @@ class IDF(OptProblem):
         for disc in self.disciplines:
             partials.update(disc.differentiate())
 
-        # Evaluate consistency constraint partials
-        for var in self.coupling_vars:
-            partials[var.name + "_tc"] = {var.name + "_t": -
-                                          ones(var.size, dtype=FLOAT_DTYPE)}
-
-        # Assemble the jacobian
         for out_var in self.doutput_vars:
-            for in_var in self.dinput_vars:
-                if in_var.name in partials[out_var.name]:
-                    self._jac[out_var.name][in_var.name] = partials[out_var.name][in_var.name]
+            if out_var in self.target_cons:
+                # Consistency constraint derivatives
+                for in_var in self.dinput_vars:
+                    if in_var in self.target_vars:
+                        if out_var.name[:-1] == in_var.name:
+                            self._jac[out_var.name][in_var.name] = - \
+                                ones(out_var.size, dtype=FLOAT_DTYPE)
+                        elif in_var.name[:-2] in partials[out_var.name[:-3]]:
+                            self._jac[out_var.name][in_var.name] = partials[out_var.name[:-3]
+                                                                            ][in_var.name[:-2]]
+                    elif in_var.name in partials[out_var.name[:-3]]:
+                        self._jac[out_var.name][in_var.name] = partials[out_var.name[:-3]][in_var.name]
+
+            else:
+                # Objective and other constraint derivatives
+                for in_var in self.dinput_vars:
+                    if in_var in self.target_vars and in_var.name[:-2] in partials[out_var.name]:
+                        self._jac[out_var.name][in_var.name] = partials[out_var.name][in_var.name[:-2]]
+                    elif in_var.name in partials[out_var.name]:
+                        self._jac[out_var.name][in_var.name] = partials[out_var.name][in_var.name]
