@@ -7,7 +7,7 @@ from pymdo.utils.array_and_dict_utils import denormalize_dict_1d, normalize_dict
 from pymdo.core.discipline import Discipline
 
 import logging
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class OptProblem(Discipline):
@@ -90,7 +90,7 @@ class OptProblem(Discipline):
         value = self._values[var.name]
 
         if var.name == self.objective.name:
-            LOGGER.info(
+            logger.info(
                 f"{self.name} - Iteration: {self._iter} - Objective: {value[0]}")
 
             self._update_log()

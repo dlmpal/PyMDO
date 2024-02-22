@@ -10,7 +10,7 @@ from pymdo.utils.array_and_dict_utils import verify_dict_1d
 from pymdo.core.discipline import Discipline
 from pymdo.utils.coupling_structure import get_couplings
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Solver:
@@ -104,10 +104,10 @@ class Solver:
             self._conv_status = self.SolverStatus.CONVERGED
 
         # Print iteration number and residual metric
-        LOGGER.info(
+        logger.info(
             f"{self.name} - Iteration: {self._iter} - Residual: {total}")
         if self._conv_status == self.SolverStatus.CONVERGED:
-            LOGGER.info(
+            logger.info(
                 f"{self.name} has converged in {self._iter} iterations.")
 
     def _apply_relaxation(self) -> None:
@@ -131,7 +131,7 @@ class Solver:
             stop_solver = True
         total = self._conv_log[-1] if self._iter > 0 else 0
         if stop_solver == True and total > self.tol:
-            LOGGER.warn(
+            logger.warn(
                 f"{self.name} has reached the maximum number of iterations: ({self.n_iter_max}), but the residual: ({total}), is above the tolerance: ({self.tol})")
         return stop_solver
 

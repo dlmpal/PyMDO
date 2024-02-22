@@ -16,13 +16,13 @@ class IDF(OptProblem):
         self.coupling_vars = get_couplings(kwargs["disciplines"])
 
         # Create target variables
-        self.targets = [Variable(c.name + "_t", c.size, c.lb, c.ub)
-                        for c in self.coupling_vars]
-        kwargs["design_vars"] += self.targets
+        self.target_vars = [Variable(c.name + "_t", c.size, c.lb, c.ub)
+                            for c in self.coupling_vars]
+        kwargs["design_vars"] += self.target_vars
 
         # Create consistency constraints
         self.target_cons = [
-            Variable(c.name + "_tc", c.size, 0, 0, True) for c in self.coupling_vars]
+            Variable(c.name + "_tc", c.size, 0, 0, False) for c in self.coupling_vars]
         kwargs["constraints"] += self.target_cons
 
         super().__init__(**kwargs)

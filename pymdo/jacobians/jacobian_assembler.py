@@ -70,10 +70,12 @@ class JacobianAssembler:
         n_inputs = get_variable_list_size(input_vars)
         n_outputs = get_variable_list_size(output_vars)
 
-        # Compute the partials
-        dRdy = self.assemble_partial(coupling_vars, coupling_vars, partial, True)
+        # Assemble the partial derivative matrices
+        dRdy = self.assemble_partial(
+            coupling_vars, coupling_vars, partial, True)
         dRdx = self.assemble_partial(input_vars, coupling_vars, partial, True)
-        dfdy = self.assemble_partial(coupling_vars, output_vars, partial, False)
+        dfdy = self.assemble_partial(
+            coupling_vars, output_vars, partial, False)
         dfdx = self.assemble_partial(input_vars, output_vars, partial, False)
 
         # Compute the total derivatives, given by total = dfdy @ (-dRdy^-1 @ dRdx)
