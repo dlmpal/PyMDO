@@ -5,8 +5,6 @@ from pymdo.core.variable import Variable
 from pymdo.utils.coupling_structure import get_couplings
 from pymdo.opt.opt_problem import OptProblem
 
-import gemseo
-
 
 class IDF(OptProblem):
     """
